@@ -54,11 +54,38 @@ public class WundergroundDataProvider {
         in.close();
         byte[] response = out.toByteArray();
 
-        FileOutputStream fos = new FileOutputStream("resources/images/current_weather.jpg");
+        FileOutputStream fos = new FileOutputStream("resources/images/current_weather.gif");
         fos.write(response);
         fos.close();
 
-        Image currentWeather = new Image("file:resources/images/current_weather.jpg");
+        Image currentWeather = new Image("file:resources/images/current_weather.gif");
         return currentWeather;
+    }
+
+    public double getCurrentTempCelsius() {
+        return currentTempCelsius;
+    }
+
+    public double getCurrentWindKph() {
+        return currentWindKph;
+    }
+
+    public String getCurrentWeatherString() {
+        return currentWeatherString;
+    }
+
+    public String getCurrentHumidity() {
+        return currentHumidity;
+    }
+
+    @Override
+    public String toString() {
+        return "WundergroundDataProvider{" +
+                "currentTempCelsius=" + currentTempCelsius +
+                ", currentWindKph=" + currentWindKph +
+                ", currentWeatherString='" + currentWeatherString + '\'' +
+                ", currentWeatherImageURL='" + currentWeatherImageURL + '\'' +
+                ", currentHumidity='" + currentHumidity + '\'' +
+                '}';
     }
 }
