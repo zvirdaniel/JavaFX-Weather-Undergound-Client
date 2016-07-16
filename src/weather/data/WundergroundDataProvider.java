@@ -10,7 +10,7 @@ import java.nio.charset.Charset;
 
 /**
  * Created by Daniel Zvir on 15.07.2016.
- * This class is provides all the weather data from selected source.
+ * This class provides all the weather data from selected source (sent via parameter).
  */
 public class WundergroundDataProvider {
     private double currentTempCelsius;
@@ -36,7 +36,7 @@ public class WundergroundDataProvider {
 
     /**
      * This method downloads the image for current weather from the internet,
-     * stores it in the application folder as resources/images/current_weather.jpg,
+     * stores it in the application folder as resources/images/current_weather.gif,
      * and returns the image as an Image object.
      * @return Image object of current weather
      * @throws IOException
