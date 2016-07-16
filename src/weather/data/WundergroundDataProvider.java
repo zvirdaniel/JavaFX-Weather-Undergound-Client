@@ -26,40 +26,42 @@ public class WundergroundDataProvider {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        JSONObject currentWeather = jsonData.getJSONObject("current_observation");
-        currentWindKph = currentWeather.getDouble("wind_kph");
-        currentTempCelsius = currentWeather.getDouble("temp_c");
-        currentWeatherString = currentWeather.getString("weather");
-        currentWeatherImageURL = currentWeather.getString("icon_url");
-        currentHumidity = currentWeather.getString("relative_humidity");
+        JSONObject currentWeather = (jsonData != null) ? jsonData.getJSONObject("current_observation") : null;
+        currentWindKph = (currentWeather != null) ? currentWeather.getDouble("wind_kph") : 0;
+        currentTempCelsius = (currentWeather != null) ? currentWeather.getDouble("temp_c") : 0;
+        currentWeatherString = (currentWeather != null) ? currentWeather.getString("weather") : null;
+        currentWeatherImageURL = (currentWeather != null) ? currentWeather.getString("icon_url") : null;
+        currentHumidity = (currentWeather != null) ? currentWeather.getString("relative_humidity") : null;
     }
 
     /**
      * This method downloads the image for current weather from the internet,
      * stores it in the application folder as resources/images/current_weather.gif,
      * and returns the image as an Image object.
+     *
      * @return Image object of current weather
      * @throws IOException
      */
-    public Image getCurrentWeatherImage() throws IOException {
-        URL url = new URL(currentWeatherImageURL);
-        InputStream in = new BufferedInputStream(url.openStream());
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        byte[] buf = new byte[1024];
-        int n = 0;
-        while (-1 != (n = in.read(buf))) {
-            out.write(buf, 0, n);
+    public Image getCurrentWeatherImage() {
+        try {
+            URL url = new URL(currentWeatherImageURL);
+            InputStream in = new BufferedInputStream(url.openStream());
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            byte[] buf = new byte[1024];
+            int n = 0;
+            while (-1 != (n = in.read(buf))) {
+                out.write(buf, 0, n);
+            }
+            out.close();
+            in.close();
+            byte[] response = out.toByteArray();
+            FileOutputStream fos = new FileOutputStream("resources/images/current_weather.gif");
+            fos.write(response);
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        out.close();
-        in.close();
-        byte[] response = out.toByteArray();
-
-        FileOutputStream fos = new FileOutputStream("resources/images/current_weather.gif");
-        fos.write(response);
-        fos.close();
-
-        Image currentWeather = new Image("file:resources/images/current_weather.gif");
-        return currentWeather;
+        return new Image("file:resources/images/current_weather.gif");
     }
 
     public double getCurrentTempCelsius() {

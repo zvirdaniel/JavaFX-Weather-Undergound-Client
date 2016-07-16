@@ -6,7 +6,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.image.ImageView;
 import weather.data.WundergroundDataProvider;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -18,6 +17,7 @@ public class Controller implements Initializable {
 
     /**
      * This method gets executed every time the application runs.
+     *
      * @param location
      * @param resources
      */
@@ -28,11 +28,7 @@ public class Controller implements Initializable {
         this.wunderground = new WundergroundDataProvider(defaultURL);
 
         // Set the current weather image
-        try {
-            weatherIcon.setImage(wunderground.getCurrentWeatherImage());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        weatherIcon.setImage(wunderground.getCurrentWeatherImage());
     }
 
     /**
