@@ -14,10 +14,12 @@ import java.nio.charset.Charset;
  */
 public class WundergroundDataProvider {
     private double currentTempCelsius;
+    private double currentTempFeelsLikeCelsius;
     private double currentWindKph;
     private String currentWeatherString;
     private String currentWeatherImageURL;
-    private String currentHumidity;
+    private String currentWindDirection;
+    private String countryName, city;
 
     public WundergroundDataProvider(String url) {
         JSONObject jsonData = null;
@@ -26,12 +28,20 @@ public class WundergroundDataProvider {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        /**
+         * This ugly thing is to prevent null pointer exceptions. It was automatically generated,
+         * and it seems like a better solution to me, than having if/else for every single method.
+         */
         JSONObject currentWeather = (jsonData != null) ? jsonData.getJSONObject("current_observation") : null;
+        JSONObject locationData = (jsonData != null) ? jsonData.getJSONObject("location") : null;
         currentWindKph = (currentWeather != null) ? currentWeather.getDouble("wind_kph") : 0;
+        currentWindDirection = (currentWeather != null) ? currentWeather.getString("wind_dir") : null;
         currentTempCelsius = (currentWeather != null) ? currentWeather.getDouble("temp_c") : 0;
+        currentTempFeelsLikeCelsius = (currentWeather != null) ? currentWeather.getDouble("feelslike_c") : 0;
         currentWeatherString = (currentWeather != null) ? currentWeather.getString("weather") : null;
         currentWeatherImageURL = (currentWeather != null) ? currentWeather.getString("icon_url") : null;
-        currentHumidity = (currentWeather != null) ? currentWeather.getString("relative_humidity") : null;
+        countryName = (locationData != null) ? locationData.getString("country_name") : null;
+        city = (locationData != null) ? locationData.getString("city") : null;
     }
 
     /**
@@ -68,6 +78,10 @@ public class WundergroundDataProvider {
         return currentTempCelsius;
     }
 
+    public double getCurrentTempFeelsLikeCelsius() {
+        return currentTempFeelsLikeCelsius;
+    }
+
     public double getCurrentWindKph() {
         return currentWindKph;
     }
@@ -76,18 +90,29 @@ public class WundergroundDataProvider {
         return currentWeatherString;
     }
 
-    public String getCurrentHumidity() {
-        return currentHumidity;
+    public String getCurrentWindDirection() {
+        return currentWindDirection;
+    }
+
+    public String getCountryName() {
+        return countryName;
+    }
+
+    public String getCity() {
+        return city;
     }
 
     @Override
     public String toString() {
         return "WundergroundDataProvider{" +
                 "currentTempCelsius=" + currentTempCelsius +
+                ", currentTempFeelsLikeCelsius=" + currentTempFeelsLikeCelsius +
                 ", currentWindKph=" + currentWindKph +
                 ", currentWeatherString='" + currentWeatherString + '\'' +
                 ", currentWeatherImageURL='" + currentWeatherImageURL + '\'' +
-                ", currentHumidity='" + currentHumidity + '\'' +
+                ", currentWindDirection='" + currentWindDirection + '\'' +
+                ", countryName='" + countryName + '\'' +
+                ", city='" + city + '\'' +
                 '}';
     }
 }
