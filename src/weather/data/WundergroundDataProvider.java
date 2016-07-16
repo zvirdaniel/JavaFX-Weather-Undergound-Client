@@ -1,21 +1,22 @@
 package weather.data;
 
+import javafx.scene.image.Image;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.nio.charset.Charset;
 
 /**
  * Created by Daniel Zvir on 15.07.2016.
- * This class is supposed to provide all the weather data from selected source.
+ * This class is provides all the weather data from selected source.
  */
 public class WundergroundDataProvider {
     private double currentTempCelsius;
     private double currentWindKph;
     private String currentWeatherString;
-    private String currentWeatherIcon;
+    private String currentWeatherImageURL;
     private String currentHumidity;
 
     public WundergroundDataProvider(String url) {
@@ -29,38 +30,35 @@ public class WundergroundDataProvider {
         currentWindKph = currentWeather.getDouble("wind_kph");
         currentTempCelsius = currentWeather.getDouble("temp_c");
         currentWeatherString = currentWeather.getString("weather");
-        currentWeatherIcon = currentWeather.getString("icon_url");
+        currentWeatherImageURL = currentWeather.getString("icon_url");
         currentHumidity = currentWeather.getString("relative_humidity");
     }
 
-    public double getCurrentTempCelsius() {
-        return currentTempCelsius;
-    }
+    /**
+     * This method downloads the image for current weather from the internet,
+     * stores it in the application folder as resources/images/current_weather.jpg,
+     * and returns the image as an Image object.
+     * @return Image object of current weather
+     * @throws IOException
+     */
+    public Image getCurrentWeatherImage() throws IOException {
+        URL url = new URL(currentWeatherImageURL);
+        InputStream in = new BufferedInputStream(url.openStream());
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        byte[] buf = new byte[1024];
+        int n = 0;
+        while (-1 != (n = in.read(buf))) {
+            out.write(buf, 0, n);
+        }
+        out.close();
+        in.close();
+        byte[] response = out.toByteArray();
 
-    public double getCurrentWindKph() {
-        return currentWindKph;
-    }
+        FileOutputStream fos = new FileOutputStream("resources/images/current_weather.jpg");
+        fos.write(response);
+        fos.close();
 
-    public String getCurrentWeatherString() {
-        return currentWeatherString;
-    }
-
-    public String getCurrentWeatherIcon() {
-        return currentWeatherIcon;
-    }
-
-    public String getCurrentHumidity() {
-        return currentHumidity;
-    }
-
-    @Override
-    public String toString() {
-        return "WundergroundDataProvider{" +
-                "currentTempCelsius=" + currentTempCelsius +
-                ", currentWindKph=" + currentWindKph +
-                ", currentWeatherString='" + currentWeatherString + '\'' +
-                ", currentWeatherIcon='" + currentWeatherIcon + '\'' +
-                ", currentHumidity='" + currentHumidity + '\'' +
-                '}';
+        Image currentWeather = new Image("file:resources/images/current_weather.jpg");
+        return currentWeather;
     }
 }
