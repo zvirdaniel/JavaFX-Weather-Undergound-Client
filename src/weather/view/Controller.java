@@ -24,9 +24,8 @@ public class Controller implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // Initialize wunderground object, fetch all weather data from default URL.
-        String defaultURL = "http://api.wunderground.com/api/5d2ff9078b329570/geolookup/conditions/forecast/q/CzechRepublic/Ostrava.json";
-        WundergroundDataProvider wunderground = new WundergroundDataProvider(defaultURL);
+        // Downloads all the data from the internet
+        WundergroundDataProvider wunderground = new WundergroundDataProvider("5d2ff9078b329570", "CzechRepublic", "Ostrava");
 
         // Set the current weather image
         weatherIcon.setImage(wunderground.getCurrentWeatherImage());

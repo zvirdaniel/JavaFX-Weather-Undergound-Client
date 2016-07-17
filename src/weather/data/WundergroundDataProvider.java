@@ -10,7 +10,8 @@ import java.nio.charset.Charset;
 
 /**
  * Created by Daniel Zvir on 15.07.2016.
- * This class provides all the weather data from selected source (sent via parameter).
+ * This class downloads current weather data from Weather Underground, converts them from JSON to POJO,
+ * including one JavaFX Image object, and makes all this data available via getters.
  */
 public class WundergroundDataProvider {
     private double currentTempCelsius;
@@ -19,9 +20,18 @@ public class WundergroundDataProvider {
     private String currentWeatherString;
     private String currentWeatherImageURL;
     private String currentWindDirection;
-    private String countryName, city;
+    private String countryName;
+    private String city;
 
-    public WundergroundDataProvider(String url) {
+    /**
+     * @param api_key     every developer needs his own api_key, suitable for his needs
+     * @param api_country make sure it exists on the website
+     * @param api_city    make sure it exists on the website
+     */
+    public WundergroundDataProvider(String api_key, String api_country, String api_city) {
+        String url = "http://api.wunderground.com/api/" + api_key + "/geolookup/conditions/forecast/q/"
+                + api_country + '/' + api_city + ".json";
+
         JSONObject jsonData = null;
         try {
             jsonData = new JSONObject(IOUtils.toString(new URL(url), Charset.forName("UTF-8")));
@@ -49,7 +59,8 @@ public class WundergroundDataProvider {
      * stores it in the application folder as resources/images/current_weather.gif,
      * and returns the image as an Image object.
      *
-     * @return Image object of current weather
+     *
+     * @return (JavaFX) Image object of current weather
      * @throws IOException
      */
     public Image getCurrentWeatherImage() {
