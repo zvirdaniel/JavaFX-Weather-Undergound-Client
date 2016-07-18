@@ -5,6 +5,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuBar;
 import javafx.scene.image.ImageView;
 import weather.data.WundergroundDataProvider;
 
@@ -12,6 +13,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
+    @FXML
+    private MenuBar gg;
     @FXML
     private CheckMenuItem defaultApiKey;
     @FXML
@@ -42,8 +45,7 @@ public class Controller implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Downloads all the data from the internet
-        WundergroundDataProvider wunderground = new WundergroundDataProvider(API_key, "CzechRepublic", "Ostrava");
-        WundergroundDataProvider w2 = new WundergroundDataProvider(API_key, "CZ", "Opava");
+        WundergroundDataProvider wunderground = new WundergroundDataProvider(API_key, "CzechRepublic", "Opava");
 
         // Set the current weather image
         weatherIcon.setImage(wunderground.getCurrentWeatherImage());
