@@ -23,7 +23,6 @@ public class WundergroundDataProvider {
     private String currentWindDirection;
     private String countryName;
     private String city;
-    private Image img;
     private JSONObject currentWeather;
 
     /**
@@ -65,6 +64,7 @@ public class WundergroundDataProvider {
      * @return (JavaFX) Image object of current weather
      */
     public Image getCurrentWeatherImage() {
+        Image img = null;
         try {
             URL imageURL = null;
             if (currentWeather != null) {

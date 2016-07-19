@@ -45,7 +45,7 @@ public class Controller implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Downloads all the data from the internet
-        WundergroundDataProvider wunderground = new WundergroundDataProvider(API_key, "CzechRepublic", "Opava");
+        WundergroundDataProvider wunderground = new WundergroundDataProvider(API_key, "CzechRepublic", "Ostrava");
 
         // Set the current weather image
         weatherIcon.setImage(wunderground.getCurrentWeatherImage());
