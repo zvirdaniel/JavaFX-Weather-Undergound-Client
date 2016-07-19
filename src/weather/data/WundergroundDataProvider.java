@@ -4,7 +4,9 @@ import javafx.scene.image.Image;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.Charset;
 
@@ -68,8 +70,13 @@ public class WundergroundDataProvider {
             if (currentWeather != null) {
                 imageURL = new URL(currentWeather.getString("icon_url"));
             }
-            InputStream in = new BufferedInputStream(imageURL.openStream());
-            img = new Image(in);
+            InputStream in = null;
+            if (imageURL != null) {
+                in = new BufferedInputStream(imageURL.openStream());
+            }
+            if (in != null) {
+                img = new Image(in);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
