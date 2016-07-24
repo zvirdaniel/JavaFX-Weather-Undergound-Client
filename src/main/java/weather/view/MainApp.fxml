@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Circle?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="outerAnchorPane" minHeight="400.0" minWidth="600.0"
+            xmlns="http://javafx.com/javafx/8.0.60" fx:controller="weather.view.Controller">
+    <children>
+        <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="600.0" prefHeight="400.0"
+                    prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <top>
+                <MenuBar fx:id="gg" BorderPane.alignment="CENTER">
+                    <menus>
+                        <Menu mnemonicParsing="false" text="Help">
+                            <items>
+                                <MenuItem mnemonicParsing="false" onAction="#handleAbout" text="About"/>
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Wunderground API Key">
+                            <items>
+                                <CheckMenuItem fx:id="defaultApiKey" mnemonicParsing="false" text="Default"/>
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Apache POI">
+                            <items>
+                                <MenuItem mnemonicParsing="false" onAction="#handleDirectoryToXLSX"
+                                          text="Save folders content to XLSX"/>
+                            </items>
+                        </Menu>
+                    </menus>
+                </MenuBar>
+            </top>
+            <center>
+                <GridPane BorderPane.alignment="CENTER">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                    </rowConstraints>
+                    <children>
+                        <ImageView fx:id="weatherIcon" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true"
+                                   preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                        <Label text="Weather location:"/>
+                        <Label fx:id="countryLabel" text="Country" GridPane.columnIndex="1"/>
+                        <Label text="Current weather:" GridPane.rowIndex="1"/>
+                        <Label fx:id="cityLabel" text="City" GridPane.columnIndex="2"/>
+                        <Label fx:id="weatherStringLabel" text="WeatherString" GridPane.columnIndex="1"
+                               GridPane.rowIndex="1"/>
+                        <Label prefHeight="29.0" prefWidth="185.0" text="Current temperature:" GridPane.rowIndex="2"/>
+                        <Label fx:id="tempCelsiusLabel" text="Temperature in Celsius" GridPane.columnIndex="1"
+                               GridPane.rowIndex="2"/>
+                        <Label fx:id="feelsLikeTempLabel" text="Feels like" GridPane.columnIndex="2"
+                               GridPane.rowIndex="2"/>
+                        <Label text="Current wind:" GridPane.rowIndex="3"/>
+                        <Label fx:id="windSpeedLabel" text="Wind speed" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                        <Label fx:id="windDirectionLabel" text="Wind direction" GridPane.columnIndex="2"
+                               GridPane.rowIndex="3"/>
+                    </children>
+                </GridPane>
+            </center>
+            <bottom>
+                <Circle fx:id="circleOne" radius="100.0" stroke="BLACK" strokeType="INSIDE"
+                        BorderPane.alignment="CENTER">
+                    <fill>
+                        <RadialGradient centerX="0.48888888888888893" centerY="0.5" cycleMethod="REFLECT" radius="0.5">
+                            <stops>
+                                <Stop color="BLACK"/>
+                                <Stop color="WHITE" offset="1.0"/>
+                            </stops>
+                        </RadialGradient>
+                    </fill>
+                </Circle>
+            </bottom>
+        </BorderPane>
+    </children>
+</AnchorPane>

@@ -61,6 +61,7 @@ public class WundergroundDataProvider {
 
     /**
      * Downloads the image file from the internet, and returns it as an Image object.
+     *
      * @return (JavaFX) Image object of current weather
      */
     public Image getCurrentWeatherImage() {
