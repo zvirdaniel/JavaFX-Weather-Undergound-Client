@@ -29,19 +29,35 @@ public class WundergroundProvider {
      * @param api_key     every developer needs his own api_key, suitable for his needs
      * @param api_country make sure it exists on the website, no error checking
      * @param api_city    make sure it exists on the website, no error checking
-     * @throws IOException such as URL not available
+     * @throws IllegalArgumentException if specified location is not found
      */
-    public WundergroundProvider(String api_key, String api_country, String api_city) throws IOException {
+    public WundergroundProvider(String api_key, String api_country, String api_city) throws IllegalArgumentException {
         String url = makeWundergroundURL(api_key, api_country, api_city);
 
         // Create a JSON object from url (download raw text data, convert it to JSON object).
-        JSONObject jsonData = new JSONObject(IOUtils.toString(new URL(url), Charset.forName("UTF-8")));
+        String data = null;
+        JSONObject jsonData = null;
+        JSONObject locationData = null;
+        try {
+            data = IOUtils.toString(new URL(url), Charset.forName("UTF-8"));
+            jsonData = new JSONObject(data);
+            locationData = jsonData.getJSONObject("location");
+        } catch (Exception e) {
+            if (e.toString().contains("java.net.UnknownHostException: api.wunderground.com")) {
+                System.err.println("No internet connection!");
+            }
+
+            if (e.getMessage().contains("not found")) {
+                throw new IllegalArgumentException("Location not found");
+            }
+
+            e.printStackTrace();
+        }
 
         /*
          * This ugly thing is to prevent null pointer exceptions. It was automatically generated,
          * and it seems like a better solution to me, than having if/else for every single method.
          */
-        JSONObject locationData = jsonData.getJSONObject("location");
         currentWeather = jsonData.getJSONObject("current_observation");
         currentWindKph = (currentWeather != null) ? currentWeather.getDouble("wind_kph") : 0;
         currentWindDirection = (currentWeather != null) ? currentWeather.getString("wind_dir") : null;

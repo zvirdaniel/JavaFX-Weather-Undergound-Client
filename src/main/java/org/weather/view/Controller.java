@@ -13,7 +13,6 @@ import javafx.util.Pair;
 import org.weather.data.WundergroundProvider;
 import org.weather.utils.BasicUtils;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -50,11 +49,12 @@ public class Controller implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        boolean hasConnected = false;
-        String country = "CZ";
-        String city = "Prague";
-        Optional<Pair<String, String>> locationData = userInputDialog();
+        String country = null;
+        String city = null;
+
         setDefaultApiKey();
+
+        Optional<Pair<String, String>> locationData = userInputDialog();
 
         if (locationData.isPresent()) {
             country = locationData.get().getKey();
@@ -62,22 +62,17 @@ public class Controller implements Initializable {
         }
 
         // Downloads all the data from the internet
-        WundergroundProvider wunderground = null;
-        try {
-            wunderground = new WundergroundProvider(currentKey, country, city);
-            hasConnected = true;
-        } catch (IOException e) {
-            if (e.toString().contains("java.net.UnknownHostException: api.wunderground.com")) {
-                System.err.println("Cannot resolve \"api.wunderground.com\"");
-            } else {
-                e.printStackTrace();
+        while (true) {
+            try {
+                WundergroundProvider wunderground = new WundergroundProvider(currentKey, country, city);
+                showWeatherData(wunderground);
+                break;
+            } catch (IllegalArgumentException e) {
+                basicUtils.showError("location", "The location was not found.\nDefault location is set.");
+                city = "Prague";
+                country = "CZ";
             }
         }
-
-        if (hasConnected) {
-            showWeatherData(wunderground);
-        }
-
     }
 
     private Optional<Pair<String, String>> userInputDialog() {
@@ -99,9 +94,9 @@ public class Controller implements Initializable {
         grid.setPadding(new Insets(20, 150, 10, 10));
 
         TextField country = new TextField();
-        country.setPromptText("Country");
+        country.setPromptText("GB / FL / CZ");
         TextField city = new TextField();
-        city.setPromptText("City");
+        city.setPromptText("London / Miami / Prague");
 
         grid.add(new Label("Country:"), 0, 0);
         grid.add(country, 1, 0);

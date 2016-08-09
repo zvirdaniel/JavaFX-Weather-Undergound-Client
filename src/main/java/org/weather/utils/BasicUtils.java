@@ -27,10 +27,10 @@ public class BasicUtils {
         File selectedFile = fileChooser.showSaveDialog(currentStage);
         if (selectedFile != null) {
             if (!selectedFile.getName().endsWith(defaultExtension)) {
-                showErrorWithSavingDialog("file", "The file cannot be saved.");
+                showError("file", "The file cannot be saved.");
             }
         } else {
-            showErrorWithSavingDialog("file", "The file cannot be saved.");
+            showError("file", "The file cannot be saved.");
         }
         return selectedFile;
     }
@@ -45,7 +45,7 @@ public class BasicUtils {
         dirChooser.setInitialDirectory(new File(System.getProperty("user.home")));
         File selectedDirectory = dirChooser.showDialog(currentStage);
         if (selectedDirectory == null) {
-            showErrorWithSavingDialog("directory", "The directory cannot be selected.");
+            showError("directory", "The directory cannot be selected.");
         }
         return selectedDirectory;
     }
@@ -54,14 +54,14 @@ public class BasicUtils {
      * @param type    Example: "directory"
      * @param content Example: "The directory cannot be saved."
      */
-    private void showErrorWithSavingDialog(String type, String content) {
+    public void showError(String type, String content) {
         // Create an alert dialog, set an icon to it
         Alert alert = new Alert(Alert.AlertType.ERROR);
         Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
         stage.getIcons().add(new Image(getClass().getResource("/images/error.png").toString()));
 
-        alert.setTitle("Error with saving " + type);
-        alert.setHeaderText("Error with saving " + type + "!");
+        alert.setTitle("Error with " + type);
+        alert.setHeaderText("Error with " + type + "!");
         alert.setContentText(content);
         alert.showAndWait();
     }
