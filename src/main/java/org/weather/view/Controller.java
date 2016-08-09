@@ -6,17 +6,13 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.weather.data.WundergroundProvider;
-import org.weather.data.XLSXCreator;
 import org.weather.utils.BasicUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
@@ -55,13 +51,20 @@ public class Controller implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         boolean hasConnected = false;
-        userInputDialog();
+        String country = "CZ";
+        String city = "Prague";
+        Optional<Pair<String, String>> locationData = userInputDialog();
         setDefaultApiKey();
+
+        if (locationData.isPresent()) {
+            country = locationData.get().getKey();
+            city = locationData.get().getValue();
+        }
 
         // Downloads all the data from the internet
         WundergroundProvider wunderground = null;
         try {
-            wunderground = new WundergroundProvider(currentKey, "CzechRepublic", "Ostrava");
+            wunderground = new WundergroundProvider(currentKey, country, city);
             hasConnected = true;
         } catch (IOException e) {
             if (e.toString().contains("java.net.UnknownHostException: api.wunderground.com")) {
@@ -77,62 +80,58 @@ public class Controller implements Initializable {
 
     }
 
-    private void userInputDialog() {
+    private Optional<Pair<String, String>> userInputDialog() {
         // Create the custom dialog.
         Dialog<Pair<String, String>> dialog = new Dialog<>();
-        dialog.setTitle("Login Dialog");
-        dialog.setHeaderText("Look, a Custom Login Dialog");
+        dialog.setTitle("Select location");
+        dialog.setHeaderText("Please, select your location");
 
         // Set the icon (must be included in the project).
         dialog.setGraphic(new ImageView(getClass().getResource("/images/MainAppIcon.png").toString()));
 
         // Set the button types.
-        ButtonType loginButtonType = new ButtonType("Login", ButtonBar.ButtonData.OK_DONE);
+        ButtonType loginButtonType = new ButtonType("Confirm", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
 
-        // Create the username and password labels and fields.
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(20, 150, 10, 10));
 
-        TextField username = new TextField();
-        username.setPromptText("Username");
-        PasswordField password = new PasswordField();
-        password.setPromptText("Password");
+        TextField country = new TextField();
+        country.setPromptText("Country");
+        TextField city = new TextField();
+        city.setPromptText("City");
 
-        grid.add(new Label("Username:"), 0, 0);
-        grid.add(username, 1, 0);
-        grid.add(new Label("Password:"), 0, 1);
-        grid.add(password, 1, 1);
+        grid.add(new Label("Country:"), 0, 0);
+        grid.add(country, 1, 0);
+        grid.add(new Label("City:"), 0, 1);
+        grid.add(city, 1, 1);
 
-        // Enable/Disable login button depending on whether a username was entered.
-        Node loginButton = dialog.getDialogPane().lookupButton(loginButtonType);
-        loginButton.setDisable(true);
+        Node confirmButton = dialog.getDialogPane().lookupButton(loginButtonType);
+        confirmButton.setDisable(true);
 
         // Do some validation (using the Java 8 lambda syntax).
-        username.textProperty().addListener((observable, oldValue, newValue) -> {
-            loginButton.setDisable(newValue.trim().isEmpty());
+        country.textProperty().addListener((observable, oldValue, newValue) -> {
+            confirmButton.setDisable(newValue.trim().isEmpty());
         });
 
         dialog.getDialogPane().setContent(grid);
 
         // Request focus on the username field by default.
-        Platform.runLater(username::requestFocus);
+        Platform.runLater(country::requestFocus);
 
         // Convert the result to a username-password-pair when the login button is clicked.
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == loginButtonType) {
-                return new Pair<>(username.getText(), password.getText());
+                return new Pair<>(country.getText(), city.getText());
             }
             return null;
         });
 
         Optional<Pair<String, String>> result = dialog.showAndWait();
 
-        result.ifPresent(usernamePassword -> {
-            System.out.println("Username=" + usernamePassword.getKey() + ", Password=" + usernamePassword.getValue());
-        });
+        return result;
     }
 
     private void showWeatherData(WundergroundProvider wunderground) {
@@ -164,31 +163,5 @@ public class Controller implements Initializable {
         alert.setContentText("Author: Daniel Zvir\nThis is my first JavaFX application.\n\n");
         alert.showAndWait();
     }
-
-    @FXML
-    public void handleDirectoryToXLSX() throws IOException {
-        // Get current stage via outerAnchorPane
-        Stage currentStage = (Stage) outerAnchorPane.getScene().getWindow();
-
-        File selectedDirectory = basicUtils.directorySelector(currentStage);
-
-        if (selectedDirectory != null) {
-            File selectedFile = basicUtils.fileSaver(currentStage, "MS Excel Spreadsheet (*.xlsx)", "*.xlsx", "Duno Apache POI.xlsx");
-
-            if (selectedFile != null) {
-                TextInputDialog dialog = new TextInputDialog("Sheet");
-                dialog.setTitle("Set sheet name");
-                dialog.setHeaderText("Enter sheet name");
-                dialog.setContentText("Please enter desired sheet name:");
-                Stage stg = (Stage) dialog.getDialogPane().getScene().getWindow();
-                stg.getIcons().add(new Image(getClass().getResource("/images/info.png").toString()));
-
-                Optional<String> result = dialog.showAndWait();
-                XLSXCreator creator = new XLSXCreator();
-                if (result.isPresent()) {
-                    creator.createXLSXwithDirectoryContent(selectedDirectory, result.get(), selectedFile);
-                }
-            }
-        }
-    }
 }
+

@@ -17,12 +17,6 @@
                                 <MenuItem mnemonicParsing="false" onAction="#handleAbout" text="About"/>
                             </items>
                         </Menu>
-                        <Menu mnemonicParsing="false" text="Apache POI">
-                            <items>
-                                <MenuItem mnemonicParsing="false" onAction="#handleDirectoryToXLSX"
-                                          text="Save folders content to XLSX"/>
-                            </items>
-                        </Menu>
                     </menus>
                 </MenuBar>
             </top>
