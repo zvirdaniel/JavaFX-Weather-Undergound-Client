@@ -1,4 +1,4 @@
-package weather.data;
+package org.weather.data;
 
 import javafx.scene.image.Image;
 import org.apache.commons.io.IOUtils;
@@ -12,10 +12,10 @@ import java.nio.charset.Charset;
 
 /**
  * Created by Daniel Zvir on 15.07.2016.
- * This class downloads current weather data from Weather Underground, converts them from JSON to POJO,
+ * This class downloads current org.weather data from Weather Underground, converts them from JSON to POJO,
  * including one JavaFX Image object, and makes all this data available via getters.
  */
-public class WundergroundDataProvider {
+public class WundergroundProvider {
     private double currentTempCelsius;
     private double currentTempFeelsLikeCelsius;
     private double currentWindKph;
@@ -27,29 +27,22 @@ public class WundergroundDataProvider {
 
     /**
      * @param api_key     every developer needs his own api_key, suitable for his needs
-     * @param api_country make sure it exists on the website
-     * @param api_city    make sure it exists on the website
+     * @param api_country make sure it exists on the website, no error checking
+     * @param api_city    make sure it exists on the website, no error checking
+     * @throws IOException such as URL not available
      */
-    public WundergroundDataProvider(String api_key, String api_country, String api_city) {
-        String url = "http://api.wunderground.com/api/" + api_key + "/geolookup/conditions/forecast/q/"
-                + api_country + '/' + api_city + ".json";
+    public WundergroundProvider(String api_key, String api_country, String api_city) throws IOException {
+        String url = makeWundergroundURL(api_key, api_country, api_city);
 
-        JSONObject jsonData = null;
-        try {
-            // Create a JSON object from url (download raw text data, convert it to JSON object).
-            jsonData = new JSONObject(IOUtils.toString(new URL(url), Charset.forName("UTF-8")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // Create a JSON object from url (download raw text data, convert it to JSON object).
+        JSONObject jsonData = new JSONObject(IOUtils.toString(new URL(url), Charset.forName("UTF-8")));
 
         /*
          * This ugly thing is to prevent null pointer exceptions. It was automatically generated,
          * and it seems like a better solution to me, than having if/else for every single method.
-         *
-         * It makes my IntelliJ happy.
          */
-        JSONObject locationData = (jsonData != null) ? jsonData.getJSONObject("location") : null;
-        currentWeather = (jsonData != null) ? jsonData.getJSONObject("current_observation") : null;
+        JSONObject locationData = jsonData.getJSONObject("location");
+        currentWeather = jsonData.getJSONObject("current_observation");
         currentWindKph = (currentWeather != null) ? currentWeather.getDouble("wind_kph") : 0;
         currentWindDirection = (currentWeather != null) ? currentWeather.getString("wind_dir") : null;
         currentTempCelsius = (currentWeather != null) ? currentWeather.getDouble("temp_c") : 0;
@@ -59,10 +52,16 @@ public class WundergroundDataProvider {
         city = (locationData != null) ? locationData.getString("city") : null;
     }
 
+
+    private String makeWundergroundURL(String api_key, String api_country, String api_city) {
+        return "http://api.wunderground.com/api/" + api_key + "/geolookup/conditions/forecast/q/"
+                + api_country + '/' + api_city + ".json";
+    }
+
     /**
      * Downloads the image file from the internet, and returns it as an Image object.
      *
-     * @return (JavaFX) Image object of current weather
+     * @return (JavaFX) Image object of current org.weather
      */
     public Image getCurrentWeatherImage() {
         Image img = null;
@@ -114,7 +113,7 @@ public class WundergroundDataProvider {
 
     @Override
     public String toString() {
-        return "WundergroundDataProvider{" +
+        return "WundergroundProvider{" +
                 "currentTempCelsius=" + currentTempCelsius +
                 ", currentTempFeelsLikeCelsius=" + currentTempFeelsLikeCelsius +
                 ", currentWindKph=" + currentWindKph +

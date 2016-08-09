@@ -1,4 +1,4 @@
-package weather.data;
+package org.weather.data;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.ss.usermodel.Cell;

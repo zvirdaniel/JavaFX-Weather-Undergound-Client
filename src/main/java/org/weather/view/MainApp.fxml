@@ -3,26 +3,18 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.paint.RadialGradient?>
-<?import javafx.scene.paint.Stop?>
-<?import javafx.scene.shape.Circle?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="outerAnchorPane" minHeight="400.0" minWidth="600.0"
-            xmlns="http://javafx.com/javafx/8.0.60" fx:controller="weather.view.Controller">
+            xmlns="http://javafx.com/javafx/8.0.65" fx:controller="org.weather.view.Controller">
     <children>
         <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="600.0" prefHeight="400.0"
                     prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
                     AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <top>
-                <MenuBar fx:id="gg" BorderPane.alignment="CENTER">
+                <MenuBar BorderPane.alignment="CENTER">
                     <menus>
                         <Menu mnemonicParsing="false" text="Help">
                             <items>
                                 <MenuItem mnemonicParsing="false" onAction="#handleAbout" text="About"/>
-                            </items>
-                        </Menu>
-                        <Menu mnemonicParsing="false" text="Wunderground API Key">
-                            <items>
-                                <CheckMenuItem fx:id="defaultApiKey" mnemonicParsing="false" text="Default"/>
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Apache POI">
@@ -68,19 +60,6 @@
                     </children>
                 </GridPane>
             </center>
-            <bottom>
-                <Circle fx:id="circleOne" radius="100.0" stroke="BLACK" strokeType="INSIDE"
-                        BorderPane.alignment="CENTER">
-                    <fill>
-                        <RadialGradient centerX="0.48888888888888893" centerY="0.5" cycleMethod="REFLECT" radius="0.5">
-                            <stops>
-                                <Stop color="BLACK"/>
-                                <Stop color="WHITE" offset="1.0"/>
-                            </stops>
-                        </RadialGradient>
-                    </fill>
-                </Circle>
-            </bottom>
         </BorderPane>
     </children>
 </AnchorPane>

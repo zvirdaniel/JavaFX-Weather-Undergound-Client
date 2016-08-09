@@ -1,4 +1,4 @@
-package weather;
+package org.weather;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
