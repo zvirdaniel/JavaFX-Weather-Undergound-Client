@@ -17,7 +17,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("view/MainApp.fxml"));
         primaryStage.setTitle("JavaFX Weather App");
-        primaryStage.getIcons().add(new Image(String.valueOf(getClass().getResource("/images/MainAppIcon.png"))));
+        primaryStage.getIcons().add(new Image(getClass().getResource("/images/app.png").toString()));
         primaryStage.setScene(new Scene(root, 600, 400));
         primaryStage.show();
     }

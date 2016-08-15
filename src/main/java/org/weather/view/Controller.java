@@ -5,9 +5,11 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.weather.data.WundergroundProvider;
 import org.weather.utils.BasicUtils;
@@ -76,6 +78,9 @@ public class Controller implements Initializable {
         Dialog<Pair<String, String>> dialog = new Dialog<>();
         dialog.setTitle("Select location");
         dialog.setHeaderText("Please, enter your location:");
+
+        Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image(getClass().getResource("/images/app.png").toString()));
 
 
         ButtonType loginButtonType = new ButtonType("Confirm", ButtonBar.ButtonData.OK_DONE);
