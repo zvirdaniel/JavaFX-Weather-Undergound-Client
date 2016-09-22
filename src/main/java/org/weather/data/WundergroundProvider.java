@@ -25,6 +25,7 @@ public class WundergroundProvider {
     private String city;
     private JSONObject currentWeather;
 
+
     /**
      * @param api_key     every developer needs his own api_key, suitable for his needs
      * @param api_country make sure it exists on the website, no error checking
@@ -45,10 +46,12 @@ public class WundergroundProvider {
         } catch (Exception e) {
             if (e.toString().contains("java.net.UnknownHostException: api.wunderground.com")) {
                 System.err.println("No internet connection!");
+                throw new IllegalArgumentException("No internet connection!");
             }
 
             if (e.getMessage().contains("not found")) {
-                throw new IllegalArgumentException("Location not found");
+                System.err.println("Location not found!");
+                throw new IllegalArgumentException("Location not found!");
             }
 
             e.printStackTrace();
@@ -58,7 +61,7 @@ public class WundergroundProvider {
          * This ugly thing is to prevent null pointer exceptions. It was automatically generated,
          * and it seems like a better solution to me, than having if/else for every single method.
          */
-        currentWeather = jsonData.getJSONObject("current_observation");
+        currentWeather = jsonData != null ? jsonData.getJSONObject("current_observation") : null;
         currentWindKph = (currentWeather != null) ? currentWeather.getDouble("wind_kph") : 0;
         currentWindDirection = (currentWeather != null) ? currentWeather.getString("wind_dir") : null;
         currentTempCelsius = (currentWeather != null) ? currentWeather.getDouble("temp_c") : 0;
