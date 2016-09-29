@@ -25,13 +25,22 @@ public class Main extends Application {
             String city = DataManagement.getInstance().getCity();
             String currentKey = DataManagement.getInstance().getCurrentKey();
 
-            if(state == null && city == null) {
+            if (state == null && city == null) {
                 System.exit(0);
             }
 
+            if (state != null && state.equals("Czech Republic")) {
+                state = "CZ";
+                DataManagement.getInstance().setState("CZ");
+            }
+
+            if (city.equals("Kupka")) {
+                showError("Kupka", "Počkej až se dostanu k moci!!!");
+                continue;
+            }
+
             try {
-                WundergroundProvider wunderground = new WundergroundProvider(currentKey, state, city);
-                DataManagement.getInstance().setWunderground(wunderground);
+                DataManagement.getInstance().setWunderground(new WundergroundProvider(currentKey, state, city));
                 break;
             } catch (IllegalArgumentException e) {
                 if (e.getMessage().equals("Location not found!")) {

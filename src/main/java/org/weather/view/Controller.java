@@ -13,6 +13,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import static org.weather.Main.getImageResource;
+import static org.weather.utils.BasicUtils.showError;
 
 public class Controller implements Initializable {
     @FXML
@@ -31,6 +32,7 @@ public class Controller implements Initializable {
     private Label windSpeedLabel;
     @FXML
     private Label windDirectionLabel;
+
     /**
      * This method gets executed every time the application runs.
      */
@@ -40,12 +42,20 @@ public class Controller implements Initializable {
     }
 
     @FXML
-    private void refresh() throws IllegalArgumentException {
+    private void refresh() {
         String currentKey = DataManagement.getInstance().getCurrentKey();
         String city = DataManagement.getInstance().getCity();
         String state = DataManagement.getInstance().getState();
 
-        DataManagement.getInstance().setWunderground(new WundergroundProvider(currentKey, state, city));
+        try {
+            DataManagement.getInstance().setWunderground(new WundergroundProvider(currentKey, state, city));
+        } catch (IllegalArgumentException e) {
+            if (e.toString().contains("No internet connection!")) {
+                showError("internet", "No internet connection");
+                System.exit(0);
+            }
+        }
+
         showData();
     }
 
