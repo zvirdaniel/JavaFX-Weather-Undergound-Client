@@ -5,10 +5,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.weather.DataManagement;
+
+import static org.weather.DataProvider.INSTANCE;
 
 /**
- * Created by zvird on 19.9.16.
+ * Created by Daniel Zvir on 19.9.16.
  */
 public class UserInputDialogController implements Runnable {
     @FXML
@@ -25,8 +26,8 @@ public class UserInputDialogController implements Runnable {
         Platform.runLater(() -> cityInput.requestFocus());
         okButton.setDisable(true);
 
-        DataManagement.getInstance().setCity(null);
-        DataManagement.getInstance().setState(null);
+        INSTANCE.setCity(null);
+        INSTANCE.setState(null);
 
         isActive = true;
         Thread t = new Thread(this);
@@ -38,8 +39,8 @@ public class UserInputDialogController implements Runnable {
         String state = stateInput.getCharacters().toString().trim();
         String city = cityInput.getCharacters().toString().trim();
 
-        DataManagement.getInstance().setState(state);
-        DataManagement.getInstance().setCity(city);
+        INSTANCE.setState(state);
+        INSTANCE.setCity(city);
 
         isActive = false;
         Stage dialogStage = (Stage) okButton.getScene().getWindow();
@@ -55,14 +56,13 @@ public class UserInputDialogController implements Runnable {
     public void run() {
         while (isActive) {
             try {
-                Thread.sleep(250);
+                Thread.sleep(200);
 
                 if (cityInput.getCharacters().toString().trim().isEmpty()) {
                     okButton.setDisable(true);
                 } else {
                     okButton.setDisable(false);
                 }
-
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

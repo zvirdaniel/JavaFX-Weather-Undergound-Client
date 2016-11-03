@@ -6,12 +6,12 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
-import org.weather.DataManagement;
 import org.weather.data.WundergroundProvider;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static org.weather.DataProvider.INSTANCE;
 import static org.weather.Main.getImageResource;
 import static org.weather.utils.BasicUtils.showError;
 
@@ -43,12 +43,12 @@ public class Controller implements Initializable {
 
     @FXML
     private void refresh() {
-        String currentKey = DataManagement.getInstance().getCurrentKey();
-        String city = DataManagement.getInstance().getCity();
-        String state = DataManagement.getInstance().getState();
+        String currentKey = INSTANCE.getCurrentKey();
+        String city = INSTANCE.getCity();
+        String state = INSTANCE.getState();
 
         try {
-            DataManagement.getInstance().setWunderground(new WundergroundProvider(currentKey, state, city));
+            INSTANCE.setWunderground(new WundergroundProvider(currentKey, state, city));
         } catch (IllegalArgumentException e) {
             if (e.toString().contains("No internet connection!")) {
                 showError("internet", "No internet connection");
@@ -60,16 +60,18 @@ public class Controller implements Initializable {
     }
 
     private void showData() {
-        WundergroundProvider wunderground = DataManagement.getInstance().getWunderground();
+        WundergroundProvider wunderground = INSTANCE.getWunderground();
 
-        weatherIcon.setImage(wunderground.getCurrentWeatherImage());
-        countryLabel.setText(wunderground.getCountryName());
-        cityLabel.setText(wunderground.getCity());
-        weatherStringLabel.setText(wunderground.getCurrentWeatherString());
-        tempCelsiusLabel.setText(String.valueOf(wunderground.getCurrentTempCelsius()) + " Celsius");
-        feelsLikeTempLabel.setText("Feels like: " + String.valueOf(wunderground.getCurrentTempFeelsLikeCelsius()) + " Celsius");
-        windSpeedLabel.setText(String.valueOf(wunderground.getCurrentWindKph()) + " kph");
-        windDirectionLabel.setText(wunderground.getCurrentWindDirection());
+        if (wunderground != null) {
+            weatherIcon.setImage(wunderground.getCurrentWeatherImage());
+            countryLabel.setText(wunderground.getCountryName());
+            cityLabel.setText(wunderground.getCity());
+            weatherStringLabel.setText(wunderground.getCurrentWeatherString());
+            tempCelsiusLabel.setText(String.valueOf(wunderground.getCurrentTempCelsius()) + " Celsius");
+            feelsLikeTempLabel.setText("Feels like: " + String.valueOf(wunderground.getCurrentTempFeelsLikeCelsius()) + " Celsius");
+            windSpeedLabel.setText(String.valueOf(wunderground.getCurrentWindKph()) + " kph");
+            windDirectionLabel.setText(wunderground.getCurrentWindDirection());
+        }
     }
 
     /**

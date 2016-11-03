@@ -19,28 +19,18 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         while (true) {
-            showDialog(primaryStage);
+            showUserInputDialog(primaryStage);
 
-            String state = DataManagement.getInstance().getState();
-            String city = DataManagement.getInstance().getCity();
-            String currentKey = DataManagement.getInstance().getCurrentKey();
+            String state = DataProvider.INSTANCE.getState();
+            String city = DataProvider.INSTANCE.getCity();
+            String currentKey = DataProvider.INSTANCE.getCurrentKey();
 
             if (state == null && city == null) {
                 System.exit(0);
             }
 
-            if (state != null && state.equals("Czech Republic")) {
-                state = "CZ";
-                DataManagement.getInstance().setState("CZ");
-            }
-
-            if (city.equals("Kupka")) {
-                showError("Kupka", "Počkej až se dostanu k moci!!!");
-                continue;
-            }
-
             try {
-                DataManagement.getInstance().setWunderground(new WundergroundProvider(currentKey, state, city));
+                DataProvider.INSTANCE.setWunderground(new WundergroundProvider(currentKey, state, city));
                 break;
             } catch (IllegalArgumentException e) {
                 if (e.getMessage().equals("Location not found!")) {
@@ -62,7 +52,7 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    private void showDialog(Stage primaryStage) throws java.io.IOException {
+    private void showUserInputDialog(Stage primaryStage) throws java.io.IOException {
         GridPane grid = FXMLLoader.load(getClass().getResource("view/UserInputDialog.fxml"));
         Stage dialogStage = new Stage();
         dialogStage.setTitle("Enter your location");
